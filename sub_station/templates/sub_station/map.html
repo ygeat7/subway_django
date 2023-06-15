@@ -1,12 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Folium Map</title>
-</head>
-<body>
-    <h1>{{ subname }}역 (주변 버스정류장 수 : {{ buscnt }}개) </h1>
-    <div>
+{% extends 'sub_station/base.html' %}
+
+{% block main_area %}
+    <h1>{{ subname }}역</h1>
+    <h3>주변 버스정류장 수: {{ buscnt }}개</h3>
+    <div id="map-container">
         {{ map | safe }}
     </div>
-</body>
-</html>
+    <h2>{{ subname }}역 시간대별 승하차 정보</h2>
+    {% if "한산한" in message %}
+        <p class='blue-text'>{{ message }}</p>
+    {% elif "혼잡한" in message %}
+        <p class='red-text'>{{ message }}</p>
+    {% endif %}
+    <div id="chart">
+        {{ chart | safe }}
+    </div>
+{% endblock %}
+
+
+

@@ -1,3 +1,19 @@
+#chart, #map-container {
+    max-width: 800px; /* 최대 가로 너비 */
+    max-height: 600px; /* 최대 세로 높이 */
+    width: 100%; /* 가로 너비 자동 조정 */
+    height: 100%; /* 세로 높이 자동 조정 */
+}
+.blue-text {
+    color: blue;
+    font-weight: bold;
+}
+
+.red-text {
+    color: red;
+    font-weight: bold;
+}
+
 html {
   line-height: 1.15;
   /* 1 */
@@ -819,7 +835,7 @@ legend {
   -ms-flex-align: center;
       align-items: center;
   font-family: 'Poppins', sans-serif;
-  background-color: #a598ee;
+  background-color: #808080;
   background-size: cover;
   background-position: center center;
   padding: 15px;
