@@ -42,42 +42,37 @@ def sub_render(request, 역이름):
     return render(request, 'sub_station/map.html', context)
 
 def sub_tr_plot(역이름):
-
     # 지하철 역이름을 필터로 모델에서 해당 값 가져오기
     queryset = SubTr.objects.filter(st_name=역이름)
+
+    # 역이름으로 필터링 한 쿼리 결과를 데이터프레임으로 변환
     sub_df = pd.DataFrame.from_records(queryset.values())
 
+    # 필요한 데이터 가공하기
     get_in_col = [x for x in sub_df.columns if '_getin' in x]
     get_out_col = [x for x in sub_df.columns if '_getout' in x]
-
     tmp1 = sub_df[get_in_col].mean()
     tmp2 = sub_df[get_out_col].mean()
     tmp1.index = [(x.split('_')[1]+'_'+x.split('_')[2]) for x in tmp1.index]
     tmp2.index = [(x.split('_')[1]+'_'+x.split('_')[2]) for x in tmp2.index]
     tmp_df = pd.DataFrame({'승차인원': tmp1, '하차인원': tmp2})
-
     total_mean = (tmp1 + tmp2).mean()
 
+    # 현재 시간과 비교해서 혼잡도 표시
     now_hour = [x for x in tmp_df.index if str(datetime.now().hour) in x]
     get_in_cong = tmp1.loc[now_hour].mean()
     get_out_cong = tmp2.loc[now_hour].mean()
-
     if (get_in_cong >= total_mean)|(get_out_cong >= total_mean):
         message = '현재 해당역은 혼잡한 시간대 입니다.'
     else:
         message = '현재 해당역은 한산한 시간대 입니다.'
 
+    # plotly 객체 생성
     fig = px.line(tmp_df, x=tmp_df.index, y=['승차인원', '하차인원'])
     fig.add_hline(y=total_mean, line=dict(color='red', dash='dash'), name='평균승하차인원수')
     fig.update_layout(
         height=500,  # 그래프의 높이 설정 (픽셀 단위)
         width=800,  # 그래프의 너비 설정 (픽셀 단위)
-        # legend=dict(
-        #     x=0.9,  # 범례의 가로 위치 (0~1 사이의 값)
-        #     y=1.0,  # 범례의 세로 위치 (0~1 사이의 값)
-        #     xanchor='center',  # 범례 위치를 x축의 중앙에 맞춤
-        #     yanchor='top',  # 범례 위치를 y축의 상단에 맞춤
-        # ),
         xaxis_title='시간대',
         yaxis_title='인원수',
         xaxis_tickangle=45,
