@@ -1,4 +1,4 @@
-FROM python:3.8.0-slim-buster
+FROM python:3.9
 WORKDIR /usr/src/app
 
 ENV PYTHONDONTWRITEBYTECODE 1
